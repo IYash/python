@@ -5,7 +5,7 @@ create on 2018-04-25
 @Author:hcl
 '''
 # Finish crawl web
-
+import index_
 def get_page(url):
     # This is a simulated get_page procedure so that you can test your
     # code on two pages "http://xkcd.com/353" and "http://xkcd.com/554".
@@ -49,21 +49,33 @@ def get_all_links(page):
         else:
             break
     return links
-
+# 结合索引进行爬虫
+def crawl_web_v1(seed):
+    tocrawl = [seed]
+    crawled = []
+    index_x = []
+    while tocrawl:
+        url = tocrawl.pop()
+        if url not in crawled:
+            content = get_page(url)
+            index_.add_page_to_index(index_x,url,content)
+            union(tocrawl,get_all_links(content))
+            crawled.append(url)
+    return index_x
 def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
     while tocrawl:
         url = tocrawl.pop()
         if url not in crawled:
-            union(tocrawl,get_all_links(get_page(url)))
+            content = get_page(url)
+            union(tocrawl,get_all_links(content))
             crawled.append(url)
     return crawled
-            
 
 
 if __name__ == '__main__':
-    crawled = crawl_web("http://xkcd.com/353")
+    crawled = crawl_web_v1("http://xkcd.com/353")
     for url in crawled:
         print url
     print 'end'
